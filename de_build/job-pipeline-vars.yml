@@ -1,0 +1,16 @@
+variables:
+  # SelfConfig
+  # If you haven't specified source_repo at cli runtime please ensure you replace it here
+  # It is case sensitive for TFS based repos
+  # - name: self_repo_src
+  #   value: src/api
+  - name: self_repo_dir
+    value: "$(Agent.BuildDirectory)/s"
+  # - name: pool_vm_image
+  #   value: ubuntu-20.04
+  - name: test_unit_path
+    value: 'tests/unit/'
+
+  # GitHub information
+  - name: create_release
+    value: true
