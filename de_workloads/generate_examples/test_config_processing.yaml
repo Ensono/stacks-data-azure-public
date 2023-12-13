@@ -10,9 +10,9 @@ pipeline_description: "Example pipeline."
 
 # Azure DevOps configurations
 ado_variable_groups_nonprod:
-  - amido-stacks-de-pipeline-nonprod
+  - radu-stacks-de-pipeline-nonprod
   - stacks-credentials-nonprod-kv
 
 ado_variable_groups_prod:
-  - amido-stacks-de-pipeline-prod
+  - radu-stacks-de-pipeline-prod
   - stacks-credentials-prod-kv
