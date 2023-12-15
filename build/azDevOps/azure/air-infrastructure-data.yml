@@ -77,7 +77,7 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: ensono-sp-creds
+      - group: stacks-credentials-nonprod-kv
       - group: radu-stacks-euw-de-nonprod-network
       - group: radu-stacks-de-pipeline-nonprod
       - name: Environment.ShortName
