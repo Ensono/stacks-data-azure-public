@@ -119,7 +119,7 @@ stages:
   #############################################################
   - stage: Deploy_NonPROD_Stage
     variables:
-      - group: amido-stacks-de-pipeline-nonprod
+      - group: radu-stacks-de-pipeline-nonprod
       - group: stacks-credentials-nonprod-kv
       - name: Environment.ShortName
         value: dev
@@ -232,7 +232,7 @@ stages:
       - Deploy_NonPROD_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-de-pipeline-prod
+      - group: radu-stacks-depipeline-prod
       - group: stacks-credentials-prod-kv
       - name: Environment.ShortName
         value: prod
