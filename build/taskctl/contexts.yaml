@@ -9,12 +9,12 @@ contexts:
         - ${PWD}:/app
         - -v
         - /var/run/docker.sock:/var/run/docker.sock
+        - --env-file
+        - envfile
         - -e
         - PSModulePath=/modules
         - -w
         - /app
-        - --env-file
-        - envfile
         - amidostacks/runner-pwsh:0.4.60-stable
         - pwsh
         - -NoProfile
@@ -41,8 +41,6 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - --env-file
-        - envfile
         - amidostacks/runner-pwsh-python:0.4.60-stable
         - pwsh
         - -NoProfile
@@ -69,8 +67,6 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - --env-file
-        - envfile
         - amidostacks/runner-pwsh-data:0.4.60-stable
         - pwsh
         - -NoProfile

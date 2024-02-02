@@ -56,7 +56,7 @@ module "kv_default" {
   pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].id) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
-  dns_resource_group_name       = var.dns_resource_group_name
+  dns_resource_group_name       = local.dns_zone_resource_group_name
   public_network_access_enabled = var.enable_private_networks ? var.kv_public_network_access_enabled : true # enabled if only public network otherwise cannot connect
   kv_private_dns_zone_id        = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.kv_private_dns_zone[0].id) : ""
   virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet[0].id)] : []
@@ -154,7 +154,6 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
 
   depends_on = [module.adb]
 }
-/*
 resource "null_resource" "approve_private_endpoints" {
   for_each = local.private_endpoint_list
 
@@ -167,6 +166,7 @@ resource "null_resource" "approve_private_endpoints" {
     adb  = module.adb.adb_databricks_id
     # Add more resources as needed
   }
+  */
 
 
   triggers = {
@@ -187,7 +187,6 @@ resource "null_resource" "approve_private_endpoints" {
   }
   depends_on = [azurerm_data_factory_managed_private_endpoint.db_auth_pe, azurerm_data_factory_managed_private_endpoint.db_pe, azurerm_data_factory_managed_private_endpoint.sql_pe, azurerm_data_factory_managed_private_endpoint.kv_pe, azurerm_data_factory_managed_private_endpoint.adls_pe, azurerm_data_factory_managed_private_endpoint.blob_pe]
 }
-*/
 
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id
@@ -234,7 +233,6 @@ data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
 }
 
-/*
 resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
   name                           = "ADF to Log Analytics"
   target_resource_id             = module.adf.adf_factory_id
@@ -269,7 +267,6 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
     }
   }
 }
-*/
 
 # Storage accounts for data lake and config
 module "adls_default" {
@@ -285,8 +282,8 @@ module "adls_default" {
   pe_subnet_id                  = var.enable_private_networks ? lower(tostring(data.azurerm_subnet.pe_subnet[0].id)) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
-  dfs_dns_resource_group_name   = var.dns_resource_group_name
-  blob_dns_resource_group_name  = var.dns_resource_group_name
+  dfs_dns_resource_group_name   = local.dns_zone_resource_group_name
+  blob_dns_resource_group_name  = local.dns_zone_resource_group_name
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
   public_network_access_enabled = !var.enable_private_networks
@@ -309,7 +306,7 @@ module "sql" {
   pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].id) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
-  dns_resource_group_name       = var.dns_resource_group_name
+  dns_resource_group_name       = local.dns_zone_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
   auto_pause_delay_in_minutes = 0

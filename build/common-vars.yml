@@ -22,9 +22,9 @@ variables:
   # there are some best practices around this if you are going for feature based environments
   # avoid running anything past dev that is not on master
   - name: tf_state_rg
-    value: "stacks-data-testing2"
+    value: "stacks-data-testing"
   - name: tf_state_storage
-    value: "testingstackstfstate2"
+    value: "testingstackstfstate"
   - name: tf_state_container
     value: "tfstate"
 
