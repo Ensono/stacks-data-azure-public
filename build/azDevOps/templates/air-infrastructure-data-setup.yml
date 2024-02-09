@@ -1,5 +1,5 @@
 parameters:
-  TaskctlVersion: 1.5.2
+  TaskctlVersion: 1.5.3
 
 steps:
   # Checkout self repo
