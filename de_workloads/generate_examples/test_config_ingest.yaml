@@ -16,11 +16,11 @@ data_source_connection_string_variable_name: sql_connection
 
 # Azure DevOps configurations
 ado_variable_groups_nonprod:
-  - amido-stacks-de-pipeline-nonprod
+  - radu-public-stacks-de-pipeline-nonprod
   - stacks-credentials-nonprod-kv
 
 ado_variable_groups_prod:
-  - amido-stacks-de-pipeline-prod
+  - radu-public-stacks-de-pipeline-prod
   - stacks-credentials-prod-kv
 
 
