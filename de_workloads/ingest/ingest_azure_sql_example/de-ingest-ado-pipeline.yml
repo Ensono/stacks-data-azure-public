@@ -1,5 +1,4 @@
 # Build and deploy pipeline for job ingest_azure_sql_example
-
 name: "$(Build.SourceBranchName)-init"
 
 pr:
