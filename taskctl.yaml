@@ -1,4 +1,4 @@
- # Import contexts and tasks for Taskctl
+# Import contexts and tasks for Taskctl
 import:
   - ./build/taskctl/contexts.yaml
   - ./build/taskctl/tasks.yaml
