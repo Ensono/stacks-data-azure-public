@@ -49,9 +49,6 @@ tasks:
     command:
       # - (Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" | Out-Null
-      - ls $env:TF_FILE_LOCATION
-      - Write-Output "*******************************************"
-      - ls /app
 
   infra:apply:
     context: powershell
@@ -59,6 +56,8 @@ tasks:
     command:
       #  - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug | out-null
       # - (Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
+      - Write-Output $env:TF_FILE_LOCATION
+      - ls $env:TF_FILE_LOCATION
       - Invoke-Terraform -Apply -Path $env:TF_FILE_LOCATION/tfplan -Debug
 
   infra:destroy:plan:
