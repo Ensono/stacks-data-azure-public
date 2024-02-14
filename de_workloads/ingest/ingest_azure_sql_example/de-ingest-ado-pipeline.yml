@@ -147,13 +147,13 @@ stages:
         variables:
           - group: ensono-sp-creds
           - group: ensono-data-${{ stage.environment_shortname }}
-  
+
         jobs:
           - deployment: Deploy_${{ stage.stage }}
             environment: ${{ variables.domain }}-${{ stage.environment_shortname }}
             pool:
               name: $(agentpool_name)
-  
+
             strategy:
               runOnce:
                 deploy:
@@ -167,11 +167,11 @@ stages:
                           sudo rm -rf $(Build.SourcesDirectory)/*
                           sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
                           sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
-  
+
                     - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                       parameters:
                         TaskctlVersion: ${{ variables.TaskctlVersion }}
-  
+
                     # Publish Config files
                     - task: AzureCLI@2
                       inputs:
@@ -183,7 +183,7 @@ stages:
                           --destination $(blob_config_destination) `
                           --account-name $(blob_configStorage) `
                           --overwrite"
-  
+
                     - task: AzureKeyVault@2
                       inputs:
                         azureSubscription: $(service_connection)
@@ -191,7 +191,7 @@ stages:
                         SecretsFilter: "*"
                         RunAsPreJob: false
                       displayName: "Get secrets from the keyvault"
-  
+
                     - task: Bash@3
                       displayName: "TaskCTL: Databricks"
                       inputs:
@@ -202,7 +202,7 @@ stages:
                         DATABRICKS_TOKEN: "$(databricks-token)"
                         DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
                         DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
-  
+
                     # Publish ADF
                     - task: Bash@3
                       displayName: "TaskCTL: infrastructure"
@@ -213,18 +213,18 @@ stages:
                         CLOUD_PLATFORM: "$(cloud_platform)"
                         TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
                         ENV_NAME: $(Environment.ShortName)
-  
+
                         TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                         TF_VAR_data_factory_resource_group_name: $(resource_group)
                         TF_VAR_data_factory: $(datafactoryname)
                         TF_VAR_integration_runtime_name: $(integration_runtime_name)
                         TF_VAR_linked_service_connectionstring: "$(sql_connection)"
-  
+
           #   # Start Testing
           - deployment: Test_${{ stage.stage }}
             dependsOn: Deploy_${{ stage.stage }}
             environment: ${{ variables.domain }}-nonprod
-  
+
             pool:
               name: $(agentpool_name)
             strategy:
