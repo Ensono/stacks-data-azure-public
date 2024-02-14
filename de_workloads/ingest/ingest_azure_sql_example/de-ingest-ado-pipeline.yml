@@ -145,110 +145,110 @@ stages:
               TF_FILE_LOCATION: /app/$(self_repo_adf_src)
 
   - ${{ each stage in parameters.stages }}:
-    - stage: ${{ stage.stage }}
-      dependsOn: ${{ stage.dependsOn }}
-      variables:
-        - group: ensono-sp-creds
-        - group: ensono-data-${{ stage.environment_shortname }}
-
-      jobs:
-        - deployment: Deploy_${{ stage.stage }}
-          environment: ${{ variables.domain }}-${{ stage.environment_shortname }}
-          pool:
-            name: $(agentpool_name)
-
-          strategy:
-            runOnce:
-              deploy:
-                steps:
-                  - task: Bash@3
-                    displayName: "Clean Workspace"
-                    inputs:
-                      targetType: "inline"
-                      script: |
-                        echo "Cleaning workspace..."
-                        sudo rm -rf $(Build.SourcesDirectory)/*
-                        sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
-                        sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
-
-                  - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-                    parameters:
-                      TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-                  # Publish Config files
-                  - task: AzureCLI@2
-                    inputs:
-                      azureSubscription: $(service_connection)
-                      scriptType: "pscore"
-                      scriptLocation: "inlineScript"
-                      inlineScript: "az storage blob upload-batch `
-                        --source $(self_repo_blob_config) `
-                        --destination $(blob_config_destination) `
-                        --account-name $(blob_configStorage) `
-                        --overwrite"
-
-                  - task: AzureKeyVault@2
-                    inputs:
-                      azureSubscription: $(service_connection)
-                      KeyVaultName: $(keyvault_name)
-                      SecretsFilter: "*"
-                      RunAsPreJob: false
-                    displayName: "Get secrets from the keyvault"
-
-                  - task: Bash@3
-                    displayName: "TaskCTL: Databricks"
-                    inputs:
-                      targetType: inline
-                      script: taskctl databricks
-                    env:
-                      DATABRICKS_HOST: "$(databricks-host)"
-                      DATABRICKS_TOKEN: "$(databricks-token)"
-                      DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
-                      DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
-
-                  # Publish ADF
-                  - task: Bash@3
-                    displayName: "TaskCTL: infrastructure"
-                    inputs:
-                      targetType: inline
-                      script: taskctl -d infrastructure
-                    env:
-                      CLOUD_PLATFORM: "$(cloud_platform)"
-                      TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
-                      ENV_NAME: $(Environment.ShortName)
-
-                      TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
-                      TF_VAR_data_factory_resource_group_name: $(resource_group)
-                      TF_VAR_data_factory: $(datafactoryname)
-                      TF_VAR_integration_runtime_name: $(integration_runtime_name)
-                      TF_VAR_linked_service_connectionstring: "$(sql_connection)"
-
-        #   # Start Testing
-        - deployment: Test_${{ stage.stage }}
-          dependsOn: Deploy_${{ stage.stage }}
-          environment: ${{ variables.domain }}-nonprod
-
-          pool:
-            name: $(agentpool_name)
-          strategy:
-            runOnce:
-              deploy:
-                steps:
-                  - template: ../../../de_build/de-workload-testing.yml
-                    parameters:
-                      pythonVersion: $(pythonVersion)
-                      githubToken: $(github_token)
-                      workingDirectory: "./"
-                      unitTestLocation: "./$(test_unit_src)"
-                      e2eTestLocation: "./$(test_end_to_end_src)"
-                      azureSubscriptionId: $(ARM_SUBSCRIPTION_ID)
-                      azureResourceGroupName: $(resource_group)
-                      azureDataFactoryName: $(datafactoryname)
-                      azureRegionName: $(region)
-                      azureStorageAccountName: $(blob_adls_storage)
-                      azureClientId: $(ARM_CLIENT_ID)
-                      azureClientSecret: $(ARM_CLIENT_SECRET)
-                      azureTenantId: $(ARM_TENANT_ID)
+      - stage: ${{ stage.stage }}
+        dependsOn: ${{ stage.dependsOn }}
+        variables:
+          - group: ensono-sp-creds
+          - group: ensono-data-${{ stage.environment_shortname }}
+  
+        jobs:
+          - deployment: Deploy_${{ stage.stage }}
+            environment: ${{ variables.domain }}-${{ stage.environment_shortname }}
+            pool:
+              name: $(agentpool_name)
+  
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - task: Bash@3
+                      displayName: "Clean Workspace"
+                      inputs:
+                        targetType: "inline"
+                        script: |
+                          echo "Cleaning workspace..."
+                          sudo rm -rf $(Build.SourcesDirectory)/*
+                          sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+                          sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
+  
+                    - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+                      parameters:
+                        TaskctlVersion: ${{ variables.TaskctlVersion }}
+  
+                    # Publish Config files
+                    - task: AzureCLI@2
+                      inputs:
+                        azureSubscription: $(service_connection)
+                        scriptType: "pscore"
+                        scriptLocation: "inlineScript"
+                        inlineScript: "az storage blob upload-batch `
+                          --source $(self_repo_blob_config) `
+                          --destination $(blob_config_destination) `
+                          --account-name $(blob_configStorage) `
+                          --overwrite"
+  
+                    - task: AzureKeyVault@2
+                      inputs:
+                        azureSubscription: $(service_connection)
+                        KeyVaultName: $(keyvault_name)
+                        SecretsFilter: "*"
+                        RunAsPreJob: false
+                      displayName: "Get secrets from the keyvault"
+  
+                    - task: Bash@3
+                      displayName: "TaskCTL: Databricks"
+                      inputs:
+                        targetType: inline
+                        script: taskctl databricks
+                      env:
+                        DATABRICKS_HOST: "$(databricks-host)"
+                        DATABRICKS_TOKEN: "$(databricks-token)"
+                        DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
+                        DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
+  
+                    # Publish ADF
+                    - task: Bash@3
+                      displayName: "TaskCTL: infrastructure"
+                      inputs:
+                        targetType: inline
+                        script: taskctl -d infrastructure
+                      env:
+                        CLOUD_PLATFORM: "$(cloud_platform)"
+                        TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
+                        ENV_NAME: $(Environment.ShortName)
+  
+                        TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+                        TF_VAR_data_factory_resource_group_name: $(resource_group)
+                        TF_VAR_data_factory: $(datafactoryname)
+                        TF_VAR_integration_runtime_name: $(integration_runtime_name)
+                        TF_VAR_linked_service_connectionstring: "$(sql_connection)"
+  
+          #   # Start Testing
+          - deployment: Test_${{ stage.stage }}
+            dependsOn: Deploy_${{ stage.stage }}
+            environment: ${{ variables.domain }}-nonprod
+  
+            pool:
+              name: $(agentpool_name)
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ../../../de_build/de-workload-testing.yml
+                      parameters:
+                        pythonVersion: $(pythonVersion)
+                        githubToken: $(github_token)
+                        workingDirectory: "./"
+                        unitTestLocation: "./$(test_unit_src)"
+                        e2eTestLocation: "./$(test_end_to_end_src)"
+                        azureSubscriptionId: $(ARM_SUBSCRIPTION_ID)
+                        azureResourceGroupName: $(resource_group)
+                        azureDataFactoryName: $(datafactoryname)
+                        azureRegionName: $(region)
+                        azureStorageAccountName: $(blob_adls_storage)
+                        azureClientId: $(ARM_CLIENT_ID)
+                        azureClientSecret: $(ARM_CLIENT_SECRET)
+                        azureTenantId: $(ARM_TENANT_ID)
 
   - stage: Release
     dependsOn:
