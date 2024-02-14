@@ -144,6 +144,7 @@ stages:
   - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
         dependsOn: ${{ stage.dependsOn }}
+        condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
           - group: ensono-sp-creds
           - group: ensono-data-${{ stage.environment_shortname }}
