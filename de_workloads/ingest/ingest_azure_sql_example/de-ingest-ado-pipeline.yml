@@ -136,7 +136,10 @@ stages:
             displayName: "TaskCTL: Lint"
             inputs:
               targetType: inline
-              script: taskctl lint
+              script: |
+                pwd
+                ls
+                taskctl lint
             env:
               CLOUD_PLATFORM: "$(cloud_platform)"
               TF_FILE_LOCATION: /app/$(self_repo_adf_src)
