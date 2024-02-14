@@ -199,8 +199,8 @@ stages:
                         targetType: inline
                         script: taskctl databricks
                       env:
-                        DATABRICKS_HOST: "$(databricks-host)"
-                        DATABRICKS_TOKEN: "$(databricks-token)"
+                        DATABRICKS_HOST: "$(databricksHost)"
+                        DATABRICKS_TOKEN: "$(databricksToken)"
                         DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
                         DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
