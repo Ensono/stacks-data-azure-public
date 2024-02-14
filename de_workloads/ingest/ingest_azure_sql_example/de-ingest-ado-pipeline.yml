@@ -139,7 +139,7 @@ stages:
               script: taskctl lint
             env:
               CLOUD_PLATFORM: "$(cloud_platform)"
-              TF_FILE_LOCATION: /app/de_workloads/$(jobtype)/$(job)/
+              TF_FILE_LOCATION: /app/$(self_repo_adf_src)
 
   - ${{ each stage in parameters.stages }}:
     - stage: ${{ stage.stage }}
