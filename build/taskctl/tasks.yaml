@@ -124,7 +124,7 @@ tasks:
 
   # Databricks tasks
   databricks:connect:
-    context: powershell
+    context: powershell-data
     description: Configure databricks-cli
     command:
       - |
@@ -138,7 +138,7 @@ tasks:
         & databricks workspace list
 
   databricks:createdir:
-    context: powershell
+    context: powershell-data
     description: Create DBFS Dir If Not Exists
     command:
       - |
@@ -156,7 +156,7 @@ tasks:
         }
 
   databricks:upload:
-    context: powershell
+    context: powershell-data
     description: Upload Spark Jobs or Whl to DBFS
     command:
       # - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
@@ -179,7 +179,7 @@ tasks:
 
   # Deworkload Testing tasks
   deworkload:Testing:
-    context: powershell
+    context: powershell-data
     description: Deworkload Unit Testing
     command:
       - |
