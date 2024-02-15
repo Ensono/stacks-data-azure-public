@@ -144,7 +144,7 @@ stages:
         dependsOn: ${{ stage.dependsOn }}
         variables:
           - group: ensono-sp-creds
-          - group: radu-public-stacks-de-pipeline-${{ stage.environment_shortname }
+          - group: radu-public-stacks-de-pipeline-${{ stage.environment_shortname }}
 
         jobs:
           - deployment: Deploy_${{ stage.stage }}
