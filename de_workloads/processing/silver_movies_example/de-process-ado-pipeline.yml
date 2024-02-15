@@ -209,7 +209,7 @@ stages:
           #   # Start Testing
           - deployment: Test_${{ stage.stage }}
             dependsOn: Deploy_${{ stage.stage }}
-            environment: ${{ variables.domain }}-nonprod
+            environment: ${{ variables.domain }}-${{ stage.stage }}
 
             pool:
               name: $(agentpool_name)
