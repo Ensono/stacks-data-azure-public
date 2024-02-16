@@ -80,7 +80,7 @@ pool:
   name: $(agentpool_name)
 
 stages:
-  - stage: Build_Stage
+  - stage: Build
     variables:
       - group: ensono-sp-creds
     jobs:
