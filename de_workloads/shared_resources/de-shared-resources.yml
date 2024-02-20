@@ -135,7 +135,7 @@ stages:
               TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
 
   - ${{ each stage in parameters.stages }}:
-      - stage: ${{ stage.stage }}
+      - stage: "Deploy-${{ stage.stage }}"
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
