@@ -135,7 +135,7 @@ stages:
               TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
 
   - ${{ each stage in parameters.stages }}:
-      - stage: "Deploy-${{ stage.stage }}"
+      - stage: "Deploy_${{ stage.stage }}"
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
@@ -231,7 +231,7 @@ stages:
 
           - deployment: Test_${{ stage.stage }}
             environment: ${{ variables.domain }}-nonprod
-            dependsOn: Deploy-${{ stage.stage }}
+            dependsOn: Deploy_${{ stage.stage }}
             pool:
               name: $(agentpool_name)
             strategy:
