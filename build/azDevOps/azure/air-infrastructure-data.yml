@@ -116,7 +116,7 @@ stages:
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
           - group: azure-sp-creds
-          - group: ensono-data-networks-${{ stage.environment_shortname }}
+          - group: stacks-data-networks-${{ stage.environment_shortname }}
 
         jobs:
           - deployment: ${{ stage.deployment_infra }}
