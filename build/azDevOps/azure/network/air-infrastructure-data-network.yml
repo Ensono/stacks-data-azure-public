@@ -47,7 +47,7 @@ variables:
 stages:
   - stage: Build
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
 
     jobs:
       - job: Validate
@@ -84,7 +84,7 @@ stages:
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
-          - group: ensono-sp-creds
+          - group: azure-sp-creds
 
         jobs:
           - deployment: Infra

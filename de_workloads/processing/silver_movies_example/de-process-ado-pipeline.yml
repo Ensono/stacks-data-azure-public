@@ -82,7 +82,7 @@ pool:
 stages:
   - stage: Build
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -143,7 +143,7 @@ stages:
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         dependsOn: ${{ stage.dependsOn }}
         variables:
-          - group: ensono-sp-creds
+          - group: azure-sp-creds
           - group: radu-data-${{ stage.environment_shortname }}
 
         jobs:
