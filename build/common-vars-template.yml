@@ -32,7 +32,7 @@ variables:
   - name: TaskctlVersion
     value: 1.5.2
   - name: pool_vm_image
-    value: ubuntu-22.04
+    value: ubuntu-24.04
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
 
